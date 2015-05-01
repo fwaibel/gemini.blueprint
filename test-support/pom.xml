@@ -81,8 +81,6 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.spring-test</artifactId>
-            <version>${spring.maven.artifact.version}</version>
-
         </dependency>
 
         <!--<dependency>-->
@@ -105,14 +103,12 @@
         <dependency>
             <groupId>org.eclipse.gemini.blueprint</groupId>
             <artifactId>gemini-blueprint-core</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
 
         <!-- used for getting Counter util in -->
         <dependency>
             <groupId>org.eclipse.gemini.blueprint</groupId>
             <artifactId>gemini-blueprint-extender</artifactId>
-            <version>${project.parent.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -163,7 +159,6 @@
         <dependency>
             <groupId>org.eclipse.gemini.blueprint</groupId>
             <artifactId>gemini-blueprint-mock</artifactId>
-            <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
 
