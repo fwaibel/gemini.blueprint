@@ -11,7 +11,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.eclipse.gemini.blueprint</groupId>
     <artifactId>gemini-blueprint-core</artifactId>
     <packaging>jar</packaging>
     <url>http://www.eclipse.org/gemini/blueprint/</url>

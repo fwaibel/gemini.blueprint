@@ -10,7 +10,6 @@
         <version>2.0.0.BUILD-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.eclipse.gemini.blueprint</groupId>
     <artifactId>gemini-blueprint-test</artifactId>
     <packaging>jar</packaging>
     <name>Gemini Blueprint Testing Framework</name>
