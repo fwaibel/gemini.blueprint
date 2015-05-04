@@ -14,20 +14,29 @@
 
 package org.eclipse.gemini.blueprint.iandt.compliance.io;
 
+import static org.eclipse.gemini.blueprint.test.BlueprintOptions.blueprintDefaults;
+import static org.eclipse.gemini.blueprint.test.BlueprintOptions.withLogging;
+import static org.junit.Assert.assertTrue;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.options;
+
 import java.io.File;
 import java.io.FilePermission;
-import java.io.InputStream;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.gemini.blueprint.iandt.BaseIntegrationTest;
-import org.eclipse.gemini.blueprint.test.BlueprintContextBootstrap;
+import org.eclipse.gemini.blueprint.io.OsgiBundleResourceLoader;
+import org.eclipse.gemini.blueprint.io.OsgiBundleResourcePatternResolver;
 import org.eclipse.gemini.blueprint.test.FilteringProbeBuilder;
 import org.junit.After;
 import org.junit.Before;
-import org.ops4j.pax.exam.*;
+import org.ops4j.pax.exam.Configuration;
+import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.ProbeBuilder;
+import org.ops4j.pax.exam.TestProbeBuilder;
 import org.ops4j.pax.exam.util.PathUtils;
 import org.osgi.framework.AdminPermission;
 import org.osgi.framework.Bundle;
@@ -36,16 +45,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.eclipse.gemini.blueprint.io.OsgiBundleResourceLoader;
-import org.eclipse.gemini.blueprint.io.OsgiBundleResourcePatternResolver;
-import org.springframework.test.context.BootstrapWith;
 import org.springframework.util.ObjectUtils;
-
-import static org.eclipse.gemini.blueprint.test.BlueprintOptions.blueprintDefaults;
-import static org.eclipse.gemini.blueprint.test.BlueprintOptions.withLogging;
-import static org.junit.Assert.assertTrue;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
 
 /**
  * Common base test class for IO integration testing.
@@ -66,7 +66,6 @@ public abstract class BaseIoTest extends BaseIntegrationTest {
 	protected ResourcePatternResolver patternLoader;
 
 	protected Bundle bundle;
-
 
 	protected String[] getBundleContentPattern() {
 		return ObjectUtils.addObjectToArray(super.getBundleContentPattern(),
@@ -118,7 +117,7 @@ public abstract class BaseIoTest extends BaseIntegrationTest {
 				mavenBundle("org.eclipse.gemini.blueprint.iandt", "io.fragment.2.bundle").versionAsInProject().start(false));
 	}
 
-	protected Object[] copyEnumeration(Enumeration enm) {
+	protected Object[] copyEnumeration(Enumeration<?> enm) {
 		List<Object> list = new ArrayList<>();
 		while (enm != null && enm.hasMoreElements())
 			list.add(enm.nextElement());
@@ -129,18 +128,6 @@ public abstract class BaseIoTest extends BaseIntegrationTest {
 		logger.debug(ObjectUtils.nullSafeToString(array));
 		assertTrue("found only " + ObjectUtils.nullSafeToString(array), array.length == expectedSize);
 	}
-
-//	protected boolean isKF() {
-//		return (createPlatform().toString().startsWith("Knopflerfish"));
-//	}
-//
-//	protected boolean isEquinox() {
-//		return (createPlatform().toString().startsWith("Equinox"));
-//	}
-//
-//	protected boolean isFelix() {
-//		return (createPlatform().toString().startsWith("Felix"));
-//	}
 
 	protected List<Permission> getTestPermissions() {
 		List<Permission> list = super.getTestPermissions();

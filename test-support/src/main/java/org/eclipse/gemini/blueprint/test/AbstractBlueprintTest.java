@@ -3,7 +3,6 @@ package org.eclipse.gemini.blueprint.test;
 import java.util.Enumeration;
 
 import org.eclipse.gemini.blueprint.context.BundleContextAware;
-
 import org.eclipse.gemini.blueprint.extender.internal.util.concurrent.Counter;
 import org.eclipse.gemini.blueprint.extender.support.internal.ConfigUtils;
 import org.eclipse.gemini.blueprint.util.OsgiBundleUtils;
@@ -20,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.BootstrapWith;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -32,8 +32,8 @@ import org.springframework.util.ObjectUtils;
  */
 @BootstrapWith(BlueprintContextBootstrap.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
+@ContextConfiguration
 public abstract class AbstractBlueprintTest implements ApplicationContextAware, BundleContextAware {
-
 
     protected static final long DEFAULT_WAIT_TIME = 60L;
     private static final long SECOND = 1000;

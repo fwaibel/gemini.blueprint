@@ -14,14 +14,16 @@
 
 package org.eclipse.gemini.blueprint.iandt.configopt;
 
+import static org.junit.Assert.fail;
+
 import java.io.FilePermission;
+import java.security.Permission;
 import java.util.List;
 
 import org.eclipse.gemini.blueprint.iandt.BaseIntegrationTest;
+import org.eclipse.gemini.blueprint.util.OsgiStringUtils;
 import org.osgi.framework.AdminPermission;
 import org.osgi.framework.Bundle;
-import org.springframework.core.io.Resource;
-import org.eclipse.gemini.blueprint.util.OsgiStringUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -52,16 +54,8 @@ public abstract class BehaviorBaseTest extends BaseIntegrationTest {
 		}
 	}
 
-	protected Bundle installBundle(String bundleId) throws Exception {
-		// locate bundle
-		Resource bundleLocation = locateBundle(bundleId);
-		assertTrue("bundle " + bundleId + " could not be found", bundleLocation.exists());
-
-		return bundleContext.installBundle(bundleLocation.getURL().toString());
-	}
-
-	protected List getTestPermissions() {
-		List list = super.getTestPermissions();
+	protected List<Permission> getTestPermissions() {
+		List<Permission> list = super.getTestPermissions();
 		list.add(new FilePermission("<<ALL FILES>>", "read"));
 		list.add(new AdminPermission("*", AdminPermission.LIFECYCLE));
 		list.add(new AdminPermission("*", AdminPermission.EXECUTE));
