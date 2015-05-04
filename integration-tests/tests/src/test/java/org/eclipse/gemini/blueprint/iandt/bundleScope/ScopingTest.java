@@ -14,52 +14,42 @@
 
 package org.eclipse.gemini.blueprint.iandt.bundleScope;
 
+import static org.eclipse.gemini.blueprint.test.BlueprintOptions.blueprintDefaults;
+import static org.eclipse.gemini.blueprint.test.BlueprintOptions.withLogging;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.options;
+
 import java.io.File;
-import java.io.FilePermission;
-import java.lang.reflect.ReflectPermission;
 import java.security.AllPermission;
 import java.security.Permission;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.PropertyPermission;
 
 import org.eclipse.gemini.blueprint.context.ConfigurableOsgiBundleApplicationContext;
 import org.eclipse.gemini.blueprint.iandt.BaseIntegrationTest;
 import org.eclipse.gemini.blueprint.iandt.scope.common.ScopeTestService;
-import org.eclipse.gemini.blueprint.test.AbstractBlueprintTest;
 import org.eclipse.gemini.blueprint.util.OsgiFilterUtils;
 import org.eclipse.gemini.blueprint.util.OsgiServiceReferenceUtils;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
-import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerMethod;
 import org.ops4j.pax.exam.util.PathUtils;
-import org.osgi.framework.*;
-import org.osgi.service.permissionadmin.PermissionAdmin;
-import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.framework.AdminPermission;
+import org.osgi.framework.ServiceReference;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ObjectUtils;
-
-import static org.eclipse.gemini.blueprint.test.BlueprintOptions.blueprintDefaults;
-import static org.eclipse.gemini.blueprint.test.BlueprintOptions.withLogging;
-import static org.junit.Assert.*;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-
 /**
  * Integration tests for 'bundle' scoped beans.
  *
  * @author Costin Leau
  */
-@RunWith(PaxExam.class)
-@ExamReactorStrategy(PerMethod.class)
 @ContextConfiguration(locations = {"classpath:org/eclipse/gemini/blueprint/iandt/bundleScope/scope-context.xml"})
 public class ScopingTest extends BaseIntegrationTest {
 
@@ -74,9 +64,9 @@ public class ScopingTest extends BaseIntegrationTest {
                 withLogging(new File(PathUtils.getBaseDir() + "/target/test-classes/logback.xml").toURI()),
                 mavenBundle("org.eclipse.gemini.blueprint.iandt", "scoped.bundle.common").versionAsInProject(),
                 mavenBundle("org.eclipse.gemini.blueprint.iandt", "scoped.bundle.a").versionAsInProject(),
-                mavenBundle("org.eclipse.gemini.blueprint.iandt", "scoped.bundle.b").versionAsInProject());
+                mavenBundle("org.eclipse.gemini.blueprint.iandt", "scoped.bundle.b").versionAsInProject()
+        		);
     }
-
 
     @Test
     public void testEnvironmentValidity() throws Exception {
@@ -194,7 +184,7 @@ public class ScopingTest extends BaseIntegrationTest {
     }
 
     protected ScopeTestService getService(String bundleName) {
-        ServiceReference ref = OsgiServiceReferenceUtils.getServiceReference(bundleContext,
+        ServiceReference<ScopeTestService> ref = OsgiServiceReferenceUtils.getServiceReference(bundleContext,
                 ScopeTestService.class.getName(), "(Bundle-SymbolicName=org.eclipse.gemini.blueprint.iandt.scope." + bundleName
                         + ")");
         if (ref == null) {

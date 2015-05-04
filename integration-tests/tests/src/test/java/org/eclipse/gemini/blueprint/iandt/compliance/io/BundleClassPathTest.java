@@ -14,44 +14,39 @@
 
 package org.eclipse.gemini.blueprint.iandt.compliance.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarInputStream;
 
 import org.eclipse.gemini.blueprint.iandt.BaseIntegrationTest;
-import org.eclipse.gemini.blueprint.test.BlueprintContextBootstrap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.TestProbeBuilder;
-import org.ops4j.pax.exam.junit.PaxExam;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
-import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
-
-import static org.junit.Assert.*;
 
 /**
  * IO compliance test for bundles containing Bundle ClassPath entries.
  *
  * @author Costin Leau
  */
-@RunWith(PaxExam.class)
 @ContextConfiguration
 public class BundleClassPathTest extends BaseIoTest {
     @Override
     protected boolean shouldWaitForSpringBundlesContextCreation() {
         return false;
     }
-
 
     @Override
     protected TestProbeBuilder postProcessProbeCustomization(TestProbeBuilder builder) {
@@ -106,7 +101,7 @@ public class BundleClassPathTest extends BaseIoTest {
     @Test 
     public void testGetResourcesOnFilePresentMultipleTimesOnTheClassPathAndInsideTheBundle() throws Exception {
         //System.out.println("running test " + this.getName());
-        Enumeration enm = bundle.getResources("org/eclipse/gemini/blueprint/iandt/compliance/io/test.file");
+        Enumeration<URL> enm = bundle.getResources("org/eclipse/gemini/blueprint/iandt/compliance/io/test.file");
         int count = 0;
         while (enm.hasMoreElements()) {
             Object object = (Object) enm.nextElement();
@@ -119,22 +114,22 @@ public class BundleClassPathTest extends BaseIoTest {
     @Test 
     public void testFindEntriesOnFileJustInsideFolderOnClassPath() throws Exception {
         //System.out.println("running test" + this.getName());
-        Enumeration enm =
+        Enumeration<URL> enm =
                 bundle.findEntries("org/eclipse/gemini/blueprint/iandt/compliance/io/", "folder-test.file", false);
         assertNull("findEntries doesn't work on bundle classpath entries", enm);
     }
 
     @Test 
     public void testFindEntriesOnFileJustInsideJarOnClassPath() throws Exception {
-        Enumeration enm = bundle.findEntries("/", "jar.file", false);
+        Enumeration<URL> enm = bundle.findEntries("/", "jar.file", false);
         assertNull("findEntries doesn't work on bundle classpath entries", enm);
     }
 
     // disabled as it fails on the server for some reason (linux + equinox)
     // TODO: investigate
     @Test @Ignore("hangs for some reason")
-    public void tstFindEntriesOnFilePresentMultipleTimesOnTheClassPathAndInsideTheBundle() throws Exception {
-        Enumeration enm = bundle.findEntries("org/eclipse/gemini/blueprint/iandt/compliance/io/", "test.file", false);
+    public void testFindEntriesOnFilePresentMultipleTimesOnTheClassPathAndInsideTheBundle() throws Exception {
+        Enumeration<URL> enm = bundle.findEntries("org/eclipse/gemini/blueprint/iandt/compliance/io/", "test.file", false);
         int count = 0;
         while (enm.hasMoreElements()) {
             count++;
@@ -158,15 +153,15 @@ public class BundleClassPathTest extends BaseIoTest {
 
     // fails on Felix + KF
     @Test 
-    public void tstFindEntriesOnMetaInfEntryOnSystemBundle() throws Exception {
+    public void testFindEntriesOnMetaInfEntryOnSystemBundle() throws Exception {
         Bundle sysBundle = bundleContext.getBundle(0);
-        Enumeration enm = sysBundle.findEntries("/", "META-INF", false);
+        Enumeration<URL> enm = sysBundle.findEntries("/", "META-INF", false);
         assertNotNull("system bundle doesn't return META-INF", enm);
     }
 
     // fails on Felix + KF
     @Test 
-    public void tstGetEntryOnMetaInfEntryOnSystemBundle() throws Exception {
+    public void testGetEntryOnMetaInfEntryOnSystemBundle() throws Exception {
         Bundle sysBundle = bundleContext.getBundle(0);
         URL url = sysBundle.getEntry("/META-INF");
         assertNotNull("system bundle doesn't consider META-INF on classpath", url);

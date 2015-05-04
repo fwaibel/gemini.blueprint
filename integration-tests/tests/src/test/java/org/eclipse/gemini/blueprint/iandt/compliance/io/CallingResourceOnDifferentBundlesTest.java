@@ -14,13 +14,15 @@
 
 package org.eclipse.gemini.blueprint.iandt.compliance.io;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.net.URL;
 import java.security.Permission;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.eclipse.gemini.blueprint.iandt.BaseIntegrationTest;
 import org.eclipse.gemini.blueprint.util.OsgiBundleUtils;
 import org.eclipse.gemini.blueprint.util.OsgiStringUtils;
 import org.junit.Ignore;
@@ -29,9 +31,6 @@ import org.osgi.framework.AdminPermission;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.SynchronousBundleListener;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * http://sourceforge.net/tracker/index.php?func=detail&aid=1581187&group_id=82798&atid=567241 ClassCastException from
@@ -64,7 +63,7 @@ public class CallingResourceOnDifferentBundlesTest extends BaseIoTest {
         for (int i = 1; i < bundles.length; i++) {
             Bundle bundle = bundles[i];
             logger.debug("calling #getResources on bundle " + OsgiStringUtils.nullSafeNameAndSymName(bundle));
-            Enumeration enm = bundle.getResources(LOCATION);
+            Enumeration<URL> enm = bundle.getResources(LOCATION);
             if (!OsgiBundleUtils.isFragment(bundle))
                 assertNotNull("bundle " + OsgiStringUtils.nullSafeNameAndSymName(bundle) + " contains no META-INF/",
                         enm);
