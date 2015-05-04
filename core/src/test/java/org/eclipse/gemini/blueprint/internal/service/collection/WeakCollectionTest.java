@@ -14,8 +14,7 @@
 
 package org.eclipse.gemini.blueprint.internal.service.collection;
 
-import org.eclipse.gemini.blueprint.GCTests;
-import org.junit.Test;
+import static org.junit.Assert.assertNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,7 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import static org.junit.Assert.assertNull;
+import org.eclipse.gemini.blueprint.GCTests;
+import org.junit.Test;
 
 /**
  * @author Costin Leau
@@ -34,34 +34,33 @@ public class WeakCollectionTest {
 
     @Test
     public void testWeakList() {
-        List list = new ArrayList();
+        List<WeakReference<?>> list = new ArrayList<WeakReference<?>>();
 
         // add some weak references
         for (int i = 0; i < 20; i++) {
-            list.add(new WeakReference(new Object()));
+            list.add(new WeakReference<Object>(new Object()));
         }
 
-        GCTests.assertGCed(new WeakReference(new Object()));
+        GCTests.assertGCed(new WeakReference<Object>(new Object()));
         for (int i = 0; i < list.size(); i++) {
-            assertNull(((WeakReference) list.get(i)).get());
-
+            assertNull((list.get(i)).get());
         }
     }
 
     @Test
     public void testWeakHashMap() {
-        Map weakMap = new WeakHashMap();
+        Map<Object, Object> weakMap = new WeakHashMap<Object, Object>();
 
         for (int i = 0; i < 10; i++) {
             weakMap.put(new Object(), null);
         }
 
-        GCTests.assertGCed(new WeakReference(new Object()));
+        GCTests.assertGCed(new WeakReference<Object>(new Object()));
 
-        Set entries = weakMap.entrySet();
+        Set<Map.Entry<Object, Object>> entries = weakMap.entrySet();
 
-        for (Iterator iter = entries.iterator(); iter.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        for (Iterator<Map.Entry<Object, Object>> iter = entries.iterator(); iter.hasNext(); ) {
+            Map.Entry<Object, Object> entry = iter.next();
             assertNull(entry.getKey());
         }
 
